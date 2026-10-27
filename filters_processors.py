@@ -169,6 +169,22 @@ def run_log(image: Image.Image, sigma: float = 1.0, laplacian_size: int = 3, opt
     }
 
 # ==========================================
+# FREQUENCY DOMAIN FILTERS PROCESSORS
+# ==========================================   
+
+def run_ideal_low_pass(image: Image.Image, D_0: float = 30.0, optimized: bool = True) -> Image.Image:
+    pass
+
+def run_gaussian_low_pass(image: Image.Image, D_0: float = 30.0, optimized: bool = True) -> Image.Image:
+    pass
+
+def run_high_pass(image: Image.Image, D_0: float = 30.0, optimized: bool = True) -> Image.Image:
+    pass
+
+def run_band_pass_and_band_stop(image: Image.Image, D_1: float = 10.0, D_2: float = 50.0, optimized: bool = True) -> Image.Image:
+    pass
+
+# ==========================================
 # REGISTRY OF PROCESSORS
 # ==========================================
 
@@ -181,6 +197,10 @@ PROCESSOR_REGISTRY = {
     "run_high_boost": run_high_boost,
     "run_dog": run_dog,
     "run_log": run_log,
+    "run_ideal_low_pass": run_ideal_low_pass,
+    "run_gaussian_low_pass": run_gaussian_low_pass,
+    "run_high_pass": run_high_pass,
+    "run_band_pass_band_stop": run_band_pass_and_band_stop
 }
 
 # ==========================================
@@ -208,4 +228,6 @@ def apply_filter(image: Image.Image, filter_name: str, params: dict, optimized: 
             filter_config["previews"][1]: result_image
         }
     elif filter_type == "combination":
+        return processor_function(image, **params, optimized=optimized)
+    elif filter_type == "frequency":
         return processor_function(image, **params, optimized=optimized)
