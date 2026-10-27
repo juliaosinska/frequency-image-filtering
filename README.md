@@ -143,5 +143,8 @@ python gui.py
   <img width="1193" height="876" alt="image" src="https://github.com/user-attachments/assets/057a8c04-b915-42f8-849d-e8091dece72c" />
   <img width="1193" height="873" alt="image" src="https://github.com/user-attachments/assets/95f7ebff-8d9a-4fad-86e1-a49f3e75fc1b" />
 
+  We can clearly observe that the Ideal Low-Pass filter provides heavy blurring, but because the mask is sharp and "rectangular" (abrupt change from 1 to 0) the frequency suppression is not natural. There are ringing artifacts - wavy halos around the high-contrast edges.
+
+  Meanwhile, Gaussian Low-Pass filter provides more natural and soft blurring effect which is because of the exponential roll-off in distance from the center of the mask. There are no ringing artifacts.
 
    
