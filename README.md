@@ -6,6 +6,9 @@
 
 Part 3 - Current project repository: [frequency-image-filtering](https://github.com/juliaosinska/frequency-image-filtering)
 
+#### Note for the professor
+ Please be aware that the new GENAI usage marking is applied only to the part that has been added in this 3rd incremental part of the solution. Other markings developed in previous tasks stay unchanged and true to the 1st version of our commenting practices.
+
 A small Python desktop app for applying convolution-based and frequency-domain image filters.
 
 ## Overview
