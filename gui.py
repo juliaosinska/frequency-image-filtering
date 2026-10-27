@@ -4,7 +4,7 @@
 import tkinter as tk
 from tkinter import filedialog, ttk
 from PIL import Image, ImageTk
-from convolution_processors import apply_filter
+from filters_processors import apply_filter
 from filters_config import FILTER_CONFIG
 
 class ImageFilterApp:
