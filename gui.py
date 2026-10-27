@@ -4,8 +4,9 @@
 import tkinter as tk
 from tkinter import filedialog, ttk
 from PIL import Image, ImageTk
-from filters_processors import apply_filter
+from dispatcher import apply_filter
 from filters_config import FILTER_CONFIG
+import numpy as np
 
 class ImageFilterApp:
     def __init__(self, root):
@@ -95,6 +96,19 @@ class ImageFilterApp:
         selected_filter = self.filter_var.get()
         filter_config = FILTER_CONFIG.get(selected_filter, {})
         params_def = filter_config.get("params", {})
+        filter_type = filter_config.get("type", "basic")
+
+        # disabling the optimized checkbox for frequency filters
+        if filter_type == "frequency":
+            self.optimized_checkbox.config(state="disabled")
+        else:
+            self.optimized_checkbox.config(state="normal")
+
+        # dynamic max slider value based on the image size
+        d_max = 300.0
+        if self.original_image is not None:
+            width, height = self.original_image.size
+            d_max = float(np.sqrt((height / 2.0)**2 + (width / 2.0)**2))
 
         # Generate dynamic sliders or controls based on the filter's parameters
         for param_name, meta in params_def.items():
@@ -104,11 +118,17 @@ class ImageFilterApp:
             tk.Label(p_frame, text=meta["label"] + ":").pack(side=tk.LEFT, padx=(0, 2))
 
             if meta["type"] in ("int", "float"):
-                var = tk.DoubleVar(value=meta["default"]) if meta["type"] == "float" else tk.IntVar(value=meta["default"])
+                max_val = meta["max"]
+
+                if param_name in ("D_0", "D_1", "D_2") and self.original_image is not None:
+                    max_val = min(meta["max"], d_max)
+
+                default_val = min(meta["default"], max_val)
+                var = tk.DoubleVar(value=default_val) if meta["type"] == "float" else tk.IntVar(value=int(default_val))
                 slider = tk.Scale(
                     p_frame,
                     from_=meta["min"],
-                    to=meta["max"],
+                    to=max_val,
                     resolution=meta["step"],
                     orient=tk.HORIZONTAL,
                     variable=var,
@@ -167,6 +187,9 @@ class ImageFilterApp:
             self.image_path = file_path
             # Load image using Pillow and ensure it's in RGB mode
             self.original_image = Image.open(file_path).convert("RGB")
+
+            self.rebuild_ui_for_current_filter()
+
             first_key = list(self.preview_canvases.keys())[0]
             self.display_image(self.original_image, self.preview_canvases[first_key])
             self.results_dict = {first_key: self.original_image}
@@ -200,8 +223,10 @@ class ImageFilterApp:
             self.status_var.set("Method for DoG: Difference of Gaussians clipped to the range [0, 255].")
         elif "Laplacian" in selected_filter:
             self.status_var.set("Method for LoG: Laplacian of Gaussian response shifted by +128 and clipped to [0, 255] for visualization.")
-        else:
+        elif "Filter" in selected_filter and "Frequency" not in selected_filter and "Pass" not in selected_filter:
             self.status_var.set(f"Method for {selected_filter}: Standard clipping (clip) of values outside the range [0, 255].")
+        else:
+            self.status_var.set(f"Frequency Domain Filter ({selected_filter}): Real part of IFFT clipped to [0, 255].")
 
     def save_image(self):
         if not hasattr(self, 'results_dict') or not self.results_dict:

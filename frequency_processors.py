@@ -31,7 +31,7 @@ def apply_frequency_filter(image: Image.Image, mask_function, **params) -> dict:
     # 4a. shift back to the original position of the spectrum
     G = np.fft.ifftshift(G_shifted)
     # 4b. compute the inverse 2D Fourier Transform to get the filtered image and get the real part
-    filtered_image_array = np.real(np.ifft2(G))
+    filtered_image_array = np.real(np.fft.ifft2(G))
 
     # clip the filtered image to the range [0, 255]
     filtered_image_array = np.clip(filtered_image_array, 0, 255).astype(np.uint8)
@@ -136,6 +136,6 @@ FREQUENCY_PROCESSOR_REGISTRY = {
     "run_ideal_low_pass": run_ideal_low_pass,
     "run_gaussian_low_pass": run_gaussian_low_pass,
     "run_high_pass": run_high_pass,
-    "run_band_pass_": run_band_pass,
+    "run_band_pass": run_band_pass,
     "run_band_stop": run_band_stop,
 }
