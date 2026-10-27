@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 
 from convolution import optimized_convolution, basic_convolution
-from convolution_filters_config import FILTER_CONFIG
+from filters_config import FILTER_CONFIG
 
 # ==========================================
 #  LEAVING KERNEL GENERATION AS PREVIOUSLY IMPLEMENTED (ONLY MODIFIED TO USE SEPARABLE GAUSSIAN)

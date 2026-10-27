@@ -80,4 +80,47 @@ FILTER_CONFIG = {
         },
         "previews": ["Original", "Gaussian (Gσ)", "LoG Result"]
     },
+
+    # ==========================================
+    # 3. FREQUENCY DOMAIN FILTERS
+    # ==========================================
+
+    # MY OWN: added configuration for the new frequency domain filters
+    
+    "Ideal Low-Pass Filter": {
+        "type": "frequency",
+        "processor": "run_ideal_low_pass",
+        "params": {
+            "D_0": {"label": "D_0 - cutoff frequency", "type": "float", "default": 30.0, "min": 1.0, "max": 300.0, "step": 1.0}
+        },
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+    },
+
+    "Gaussian Low-Pass Filter": {
+        "type": "frequency",
+        "processor": "run_gaussian_low_pass",
+        "params": {
+            "D_0": {"label": "D_0 - cutoff frequency", "type": "float", "default": 30.0, "min": 1.0, "max": 300.0, "step": 1.0}
+        },
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+    },
+
+    "High-Pass Filter": {
+        "type": "frequency",
+        "processor": "run_high_pass",
+        "params": {
+            "D_0": {"label": "D_0 - cutoff frequency", "type": "float", "default": 30.0, "min": 1.0, "max": 300.0, "step": 1.0}
+        },
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+    },
+
+    "Band-Pass and Band-Stop Filter": {
+        "type": "frequency",
+        "processor": "run_band_pass_band_stop",
+        "params": {
+            "D_1": {"label": "D_1 - lower cutoff frequency", "type": "float", "default": 10.0, "min": 1.0, "max": 300.0, "step": 1.0},
+            "D_2": {"label": "D_2 - upper cutoff frequency", "type": "float", "default": 50.0, "min": 1.0, "max": 300.0, "step": 1.0}
+        },
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+    },
 }
