@@ -87,22 +87,27 @@ These filters convert the image to grayscale, compute its 2D Fourier transform, 
 ### Ideal Low-Pass Filter
 - Purpose: keeps frequencies within a circular cutoff and removes higher frequencies, smoothing the image.
 - Effect of parameters: `D_0` sets the cutoff radius. As the cutoff radius decreases, the image becomes increasingly blurred, accompanied by noticeable circular ringing artifacts (waves) around high-contrast edges due to the sharp rectangular cutoff.
+<img width="1198" height="880" alt="image" src="https://github.com/user-attachments/assets/17d7a464-6ef4-4303-903f-e42d484efb36" />
 
 ### Gaussian Low-Pass Filter
 - Purpose: weakens higher frequencies smoothly to blur the image with fewer abrupt transitions than an ideal low-pass filter.
 - Effect of parameters: `D_0` controls the frequency scale. A smaller cutoff progressively softens the image with natural, smooth transitions, entirely avoiding the artificial ringing halos seen in the ideal low-pass filter.
+<img width="1195" height="880" alt="image" src="https://github.com/user-attachments/assets/73c58604-5284-46d7-92c4-bca551f9d585" />
 
 ### High-Pass Filter
 - Purpose: removes low frequencies and emphasizes fine detail and rapid intensity changes.
 - Effect of parameters: `D_0` sets the cutoff radius. Increasing the cutoff radius strips away broader structural shapes, leaving a striking, high-contrast outline of sharp edges and fine textures displayed on a neutral gray background.
+<img width="1197" height="874" alt="image" src="https://github.com/user-attachments/assets/90838f38-4408-4f8f-9819-a3d482161203" />
 
 ### Band-Pass Filter
 - Purpose: keeps frequencies between two cutoff values and removes frequencies outside that band.
 - Effect of parameters: `D_1` is the lower cutoff and `D_2` is the upper cutoff. Isolating narrow or shifted frequency bands highlights specific mid-scale structural textures, while pushing the band to the extreme outer edges results in a nearly black image due to the lack of high-frequency energy.
+<img width="1194" height="875" alt="image" src="https://github.com/user-attachments/assets/8dcf6058-9eb6-4439-b03c-e83a20d948b5" />
 
 ### Band-Stop Filter
 - Purpose: removes frequencies between two cutoff values while keeping frequencies outside that band.
 - Effect of parameters: `D_1` and `D_2` set the lower and upper cutoffs of the rejected band. Removing a specific band of intermediate frequencies suppresses corresponding mid-scale details while keeping the overall image brightness and primary structure remarkably stable.
+<img width="1192" height="876" alt="image" src="https://github.com/user-attachments/assets/992a609c-89b1-4150-acd9-48431125e0da" />
 
 ## Project structure
 
@@ -135,6 +140,8 @@ python gui.py
 ## Notes
 
   ### Comparison of the Ideal Low-Pass Filter and Gaussian Low-Pass Filter with the same D_0 parameter value
-  
+  <img width="1193" height="876" alt="image" src="https://github.com/user-attachments/assets/057a8c04-b915-42f8-849d-e8091dece72c" />
+  <img width="1193" height="873" alt="image" src="https://github.com/user-attachments/assets/95f7ebff-8d9a-4fad-86e1-a49f3e75fc1b" />
+
 
    
