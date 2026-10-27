@@ -1,14 +1,16 @@
 # Image Filtering App
 
-Base of this solution can be accessed in this repository: [image-filtering](https://github.com/juliaosinska/image-filtering)
+1st part of this solution: [image-filtering](https://github.com/juliaosinska/image-filtering)
 
-Current project repository: [advanced-image-filtering](https://github.com/juliaosinska/advanced-image-filtering)
+2nd part of this solution (incremental): [advanced-image-filtering](https://github.com/juliaosinska/advanced-image-filtering)
 
-A small Python desktop app for applying convolution-based image filters.
+Part 3 - Current project repository: [frequency-image-filtering](https://github.com/juliaosinska/frequency-image-filtering)
+
+A small Python desktop app for applying convolution-based and frequency-domain image filters.
 
 ## Overview
 
-This project lets you upload an image, choose a filter, adjust its parameters, preview the result, and save the processed output. The app uses NumPy and Pillow for image processing and includes optional optimized convolution paths for faster execution.
+Upload an image, choose a filter, adjust its parameters, inspect the result and intermediate processing stages, and save the output. Convolution filters use NumPy and Pillow, with a choice between basic and optimized convolution. Frequency-domain filters use the 2D Fourier transform and display the image spectrum and filter mask alongside the result.
 
 ## Included filters
 
@@ -21,13 +23,23 @@ This project lets you upload an image, choose a filter, adjust its parameters, p
 - Difference of Gaussians (DoG)
 - Laplacian of Gaussian (LoG)
 
+### Frequency-domain filters
+
+- Ideal Low-Pass Filter
+- Gaussian Low-Pass Filter
+- High-Pass Filter
+- Band-Pass Filter
+- Band-Stop Filter
+
 ## Features
 
 - Upload an image from disk
-- Preview the original image and filtered output side by side
-- View multiple intermediate previews for advanced filters
-- Adjust parameters such as kernel size, sigma, strength, and boost factor
-- Toggle between optimized and basic convolution implementations
+- Preview the original image, filtered output, and intermediate processing stages
+- Adjust filter parameters, including kernel size, sigma, strength, boost factor, and frequency cutoffs
+- View the log-scaled Fourier spectrum and frequency mask when using a frequency-domain filter
+- Set low-pass and high-pass cutoff frequencies, or lower and upper cutoffs for band filters
+- Toggle between optimized and basic convolution for convolution filters; this option is disabled for frequency-domain filters
+- Automatically limit frequency cutoff sliders to the selected image dimensions
 - Save the filtered image as PNG or JPG
 
 ## Filter descriptions and parameter effects
@@ -53,72 +65,76 @@ This project lets you upload an image, choose a filter, adjust its parameters, p
 ### Unsharp Mask (USM)
 - Purpose: creates a sharper image by emphasizing the difference between the original image and its blurred version.
 - Effect of parameters: `Sigma` defines the blur used to create the mask; larger sigma gives a smoother base image and a broader sharpening effect. `Alpha` controls the strength of the enhancement; higher values make edges more pronounced but can over-sharpen the image.
-<img width="1196" height="878" alt="image" src="https://github.com/user-attachments/assets/eee6b357-728a-4733-8b28-906d01a12af4" />
 
 ### High-Boost Filter
 - Purpose: enhances fine details more strongly than a standard unsharp mask while preserving contrast in the image.
 - Effect of parameters: `Sigma` controls the amount of initial blur, while `A (Boost Factor)` controls the enhancement strength. Larger values increase detail contrast and edge emphasis, but too high a value can make the image look exaggerated or unnatural.
-<img width="1197" height="878" alt="image" src="https://github.com/user-attachments/assets/31f672b5-78a5-4494-b58e-88ccba51f0c1" />
 
 ### Difference of Gaussians (DoG)
 - Purpose: detects edges and features by subtracting one blurred version of the image from another with a different blur scale.
 - Effect of parameters: `Sigma 1` and `Sigma 2` control the two Gaussian blurs. Increasing either sigma emphasizes larger image structures, while the difference between the values determines which details stand out most.
-<img width="1194" height="877" alt="image" src="https://github.com/user-attachments/assets/e720679c-404b-451e-9fbc-72ce812251f2" />
 
 ### Laplacian of Gaussian (LoG)
 - Purpose: combines Gaussian smoothing and Laplacian edge detection to detect edges and blob-like structures.
 - Effect of parameters: `Sigma` sets the smoothing scale; larger values suppress fine details and emphasize larger structures. `Laplacian Size` changes the sensitivity and thickness of the detected edges.
-<img width="1194" height="876" alt="image" src="https://github.com/user-attachments/assets/9ccc4b5d-0fe2-4d52-8915-6e021e937d2d" />
+
+#### Note: you can see the examples for those advanced filters in the related repo: [advanced-image-filtering](https://github.com/juliaosinska/advanced-image-filtering)
+
+## Frequency-domain filters
+
+These filters convert the image to grayscale, compute its 2D Fourier transform, apply a mask in the frequency domain, and transform the result back to an image. Their previews include the original image, the log-scaled spectrum, the mask, and the filtered result. High-pass results are shifted for grayscale visualization.
+
+### Ideal Low-Pass Filter
+- Purpose: keeps frequencies within a circular cutoff and removes higher frequencies, smoothing the image.
+- Effect of parameters: `D_0` sets the cutoff radius. As the cutoff radius decreases, the image becomes increasingly blurred, accompanied by noticeable circular ringing artifacts (waves) around high-contrast edges due to the sharp rectangular cutoff.
+
+### Gaussian Low-Pass Filter
+- Purpose: weakens higher frequencies smoothly to blur the image with fewer abrupt transitions than an ideal low-pass filter.
+- Effect of parameters: `D_0` controls the frequency scale. A smaller cutoff progressively softens the image with natural, smooth transitions, entirely avoiding the artificial ringing halos seen in the ideal low-pass filter.
+
+### High-Pass Filter
+- Purpose: removes low frequencies and emphasizes fine detail and rapid intensity changes.
+- Effect of parameters: `D_0` sets the cutoff radius. Increasing the cutoff radius strips away broader structural shapes, leaving a striking, high-contrast outline of sharp edges and fine textures displayed on a neutral gray background.
+
+### Band-Pass Filter
+- Purpose: keeps frequencies between two cutoff values and removes frequencies outside that band.
+- Effect of parameters: `D_1` is the lower cutoff and `D_2` is the upper cutoff. Isolating narrow or shifted frequency bands highlights specific mid-scale structural textures, while pushing the band to the extreme outer edges results in a nearly black image due to the lack of high-frequency energy.
+
+### Band-Stop Filter
+- Purpose: removes frequencies between two cutoff values while keeping frequencies outside that band.
+- Effect of parameters: `D_1` and `D_2` set the lower and upper cutoffs of the rejected band. Removing a specific band of intermediate frequencies suppresses corresponding mid-scale details while keeping the overall image brightness and primary structure remarkably stable.
 
 ## Project structure
 
 - `gui.py` — Tkinter GUI and user controls
-- `processors.py` — filter implementations and processor registry
-- `convolution.py` — low-level convolution operations
-- `filters_config.py` — filter definitions and parameter metadata
-- `test_images/` — sample images that can be used to test and compare filter behavior
+- `filters_config.py` — filter definitions, parameter metadata, and preview labels
+- `dispatcher.py` — routes the selected filter to its processor
+- `convolution.py` — basic and optimized spatial convolution implementations
+- `convolution_processors.py` — spatial and combined-filter implementations
+- `frequency_processors.py` — Fourier transform processing and frequency masks
+- `test_images/` — sample images for testing and comparing filters
 
 ## Requirements
 
-Install the required libraries before running the app:
+Python, NumPy, and Pillow are required. Tkinter is included with most standard Windows Python installations.
 
-```bash
-pip install pillow numpy
+Install the libraries using the same Python interpreter you will use to run the app:
+
+```powershell
+python -m pip install Pillow numpy
 ```
 
 ## Run the app
 
-From the project root:
+From this project folder:
 
-```bash
+```powershell
 python gui.py
 ```
 
 ## Notes
 
-   ### GenAI tools used - Gemini for:
-   - User Interface implementation (desktop window, user controls etc.),
-   - helping with the development of the optimized convolution (vectorization for faster image processing),
-   - handling image edges,
-   - getting the Gaussian filter kernel formula right for adjustable sigma value,
-   - helping to prepare the `filters_config.py` file by gathering all necessary parameters in one place,
-   - helping with adjusting the high-boost formula to ensure avoiding dark images,
-   - helped with adjusting the LoG output to ensure proper visualization by shifting the values by +128 to bring negative values into the visible range,
-   - some basic debugging of erros caused by e.g. overlooked type changes needed to be applied in a few places,
-   - README.md generation (except the `Notes` section).
+  ### Comparison of the Ideal Low-Pass Filter and Gaussian Low-Pass Filter with the same D_0 parameter value
+  
 
-   ### DoG vs LoG
-   - Both methods are based on Gaussian smoothing followed by a second-order response, so they often highlight similar edges and blob-like structures when the parameters are chosen appropriately.
-   - DoG is a direct subtraction of two Gaussian-smoothed images, while LoG applies a Laplacian operator after Gaussian filtering. In practice, LoG is more continuous and can be interpreted as a scale-normalized edge detector, while DoG is often simpler and computationally convenient as an approximation of LoG.
-   - When `sigma1` and `sigma2` in DoG are close together, the DoG response approximates the LoG response around a certain scale. This is why both techniques tend to give similar edge localization and feature detection results for comparable scales.
-
-   ### High-Boost relation to Unsharp Mask
-   The high-boost filter is defined as
-  `H = A · I − Gσ`, where `A ≥ 1`.
-  Since `I − Gσ` is the high-frequency mask, we can rewrite it as
-  `H = I + (A − 1) · (I − Gσ)`.
-  This is exactly the unsharp-mask form
-  `U = I + α · (I − Gσ)`
-  with `α = A − 1`.
-  Therefore, the high-boost filter is a generalization of USM: for `A = 1`, the enhancement term disappears, and for `A > 1` the image is sharpened proportionally to `A − 1`.
-# frequency-image-filtering
+   

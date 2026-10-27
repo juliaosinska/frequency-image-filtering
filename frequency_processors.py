@@ -33,6 +33,7 @@ def apply_frequency_filter(image: Image.Image, mask_function, is_high_pass: bool
     # 4b. compute the inverse 2D Fourier Transform to get the filtered image and get the real part
     filtered_image_array = np.real(np.fft.ifft2(G))
 
+    # GENAI: Gemini - added the grayscale shift for visualization of the high-pass result
     if is_high_pass:
         # method picked for better visualization of the filtered high-pass image: shift by 128 (grayscale)
         filtered_image_array = np.clip(filtered_image_array + 128, 0, 255).astype(np.uint8)
