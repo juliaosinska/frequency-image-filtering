@@ -172,7 +172,7 @@ def run_log(image: Image.Image, sigma: float = 1.0, laplacian_size: int = 3, opt
 # REGISTRY OF PROCESSORS
 # ==========================================
 
-PROCESSOR_REGISTRY = {
+CONVOLUTION_PROCESSOR_REGISTRY = {
     "run_averaging": run_averaging,
     "run_gaussian_separable": run_gaussian_separable,
     "run_sharpening": run_sharpening,
@@ -182,30 +182,3 @@ PROCESSOR_REGISTRY = {
     "run_dog": run_dog,
     "run_log": run_log
 }
-
-# ==========================================
-# HELPER FUNCTION TO APPLY FILTERS BASED ON CONFIGURATION
-# ==========================================
-
-def apply_filter(image: Image.Image, filter_name: str, params: dict, optimized: bool = True) -> Image.Image:
-    if filter_name not in FILTER_CONFIG:
-        raise ValueError(f"Filter '{filter_name}' is not defined in FILTER_CONFIG.")
-
-    filter_config = FILTER_CONFIG[filter_name]
-    filter_type = filter_config["type"]
-    filter_processor_key = filter_config["processor"]
-
-    if filter_processor_key not in PROCESSOR_REGISTRY:
-        raise ValueError(f"Processor '{filter_processor_key}' for filter '{filter_name}' is not registered.")
-
-    processor_function = PROCESSOR_REGISTRY[filter_processor_key]
-
-
-    if filter_type == "basic":
-        result_image = processor_function(image, **params, optimized=optimized)
-        return {
-            filter_config["previews"][0]: image,
-            filter_config["previews"][1]: result_image
-        }
-    elif filter_type == "combination":
-        return processor_function(image, **params, optimized=optimized)
