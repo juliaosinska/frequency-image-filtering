@@ -6,7 +6,7 @@ from PIL import Image
 # ==========================================
 
 # MY OWN CODE: manually implemented the pipeline defined in the task for frequency domain filtering
-def apply_frequency_filter(image: Image.Image, mask_function, **params) -> dict:
+def apply_frequency_filter(image: Image.Image, mask_function, is_high_pass: bool = False, **params) -> dict:
     grayscale_image = image.convert("L")
     image_array = np.array(grayscale_image)
     N, M = image_array.shape
@@ -33,8 +33,12 @@ def apply_frequency_filter(image: Image.Image, mask_function, **params) -> dict:
     # 4b. compute the inverse 2D Fourier Transform to get the filtered image and get the real part
     filtered_image_array = np.real(np.fft.ifft2(G))
 
-    # clip the filtered image to the range [0, 255]
-    filtered_image_array = np.clip(filtered_image_array, 0, 255).astype(np.uint8)
+    if is_high_pass:
+        # method picked for better visualization of the filtered high-pass image: shift by 128 (grayscale)
+        filtered_image_array = np.clip(filtered_image_array + 128, 0, 255).astype(np.uint8)
+    else:
+        # clip the filtered image to the range [0, 255]
+        filtered_image_array = np.clip(filtered_image_array, 0, 255).astype(np.uint8)
 
     return {
         "Original": image,
@@ -120,7 +124,7 @@ def run_gaussian_low_pass(image: Image.Image, D_0: float = 30.0) -> dict:
     return apply_frequency_filter(image, build_gaussian_low_pass_mask, D_0=D_0)
 
 def run_high_pass(image: Image.Image, D_0: float = 30.0) -> dict:
-    return apply_frequency_filter(image, build_high_pass_mask, D_0=D_0)
+    return apply_frequency_filter(image, build_high_pass_mask, is_high_pass=True, D_0=D_0)
 
 def run_band_pass(image: Image.Image, D_1: float = 10.0, D_2: float = 50.0) -> dict:
     return apply_frequency_filter(image, build_band_pass_mask, D_1=D_1, D_2=D_2)
