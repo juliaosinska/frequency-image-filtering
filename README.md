@@ -150,4 +150,8 @@ python gui.py
 
   Meanwhile, Gaussian Low-Pass filter provides more natural and soft blurring effect which is because of the exponential roll-off in distance from the center of the mask. There are no ringing artifacts.
 
+  ### AI usage
+  - Added the +128 shift for the high-pass filter. It's for the purpose of better visualization. Avoiding pitch black backgroundd.
+  - Added an optimized version of the mask builder for ideal low-pass and Gaussian low-pass filters. Instead of using nested loops that are extremely inefficient for large images - we use numpys vectorization to speed up tghe process around 50x.
+
    

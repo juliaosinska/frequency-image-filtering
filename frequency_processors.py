@@ -28,7 +28,7 @@ def apply_frequency_filter(image: Image.Image, mask_function, is_high_pass: bool
     # 3. filtration in the frequency domain
     G_shifted = F_shifted * H
 
-    # spectrun in log scale added for visualization
+    # spectrum in log scale added for visualization
     filtered_spectrum_log = np.log(1 + np.abs(G_shifted))
     if np.max(filtered_spectrum_log)> 0:
         filtered_spectrum_log = np.clip(255 * (filtered_spectrum_log / np. max(filtered_spectrum_log)), 0, 255).astype(np.uint8)
