@@ -85,6 +85,18 @@ class ImageFilterApp:
         self.reset_filter_output()
 
     def on_param_changed(self, *args):
+        selected_filter = self.filter_var.get()
+        
+        # validation for band filters D_1 < D_2
+        if selected_filter in ("Band-Pass Filter", "Band-Stop Filter"):
+            if "D_1" in self.param_vars and "D_2" in self.param_vars:
+                d1_val = self.param_vars["D_1"].get()
+                d2_val = self.param_vars["D_2"].get()
+                
+                if d1_val >= d2_val:
+                    new_d1 = max(1.0, d2_val - 1.0)
+                    self.param_vars["D_1"].set(new_d1)
+
         self.reset_filter_output(clear_original=False)
 
     def rebuild_ui_for_current_filter(self):
