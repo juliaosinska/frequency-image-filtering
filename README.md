@@ -2,7 +2,7 @@
 
 1st part of this solution: [image-filtering](https://github.com/juliaosinska/image-filtering)
 
-2nd part of this solution (incremental): [advanced-image-filtering](https://github.com/juliaosinska/advanced-image-filtering)
+2nd part of this solution: [advanced-image-filtering](https://github.com/juliaosinska/advanced-image-filtering)
 
 Part 3 - Current project repository: [frequency-image-filtering](https://github.com/juliaosinska/frequency-image-filtering)
 
