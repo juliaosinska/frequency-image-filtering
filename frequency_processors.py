@@ -28,6 +28,13 @@ def apply_frequency_filter(image: Image.Image, mask_function, is_high_pass: bool
     # 3. filtration in the frequency domain
     G_shifted = F_shifted * H
 
+    # spectrun in log scale added for visualization
+    filtered_spectrum_log = np.log(1 + np.abs(G_shifted))
+    if np.max(filtered_spectrum_log)> 0:
+        filtered_spectrum_log = np.clip(255 * (filtered_spectrum_log / np. max(filtered_spectrum_log)), 0, 255).astype(np.uint8)
+    else:
+        filtered_spectrum_log = np.zeros((N, M), dtype=np.uint8)
+
     # 4a. shift back to the original position of the spectrum
     G = np.fft.ifftshift(G_shifted)
     # 4b. compute the inverse 2D Fourier Transform to get the filtered image and get the real part
@@ -45,6 +52,7 @@ def apply_frequency_filter(image: Image.Image, mask_function, is_high_pass: bool
         "Original": image,
         "Spectrum (log)": Image.fromarray(spectrum_log),
         "Mask H(u,v)": Image.fromarray(mask_visual),       
+        "Filtered Spectrum (log)": Image.fromarray(filtered_spectrum_log),
         "Filtered Result": Image.fromarray(filtered_image_array)
     }
 

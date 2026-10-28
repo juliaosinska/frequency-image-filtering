@@ -93,7 +93,7 @@ FILTER_CONFIG = {
         "params": {
             "D_0": {"label": "D_0 - cutoff frequency", "type": "float", "default": 30.0, "min": 1.0, "max": 300.0, "step": 1.0}
         },
-        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Spectrum (log)", "Filtered Result"]
     },
 
     "Gaussian Low-Pass Filter": {
@@ -102,7 +102,7 @@ FILTER_CONFIG = {
         "params": {
             "D_0": {"label": "D_0 - cutoff frequency", "type": "float", "default": 30.0, "min": 1.0, "max": 300.0, "step": 1.0}
         },
-        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Spectrum (log)", "Filtered Result"]
     },
 
     "High-Pass Filter": {
@@ -111,7 +111,7 @@ FILTER_CONFIG = {
         "params": {
             "D_0": {"label": "D_0 - cutoff frequency", "type": "float", "default": 30.0, "min": 1.0, "max": 300.0, "step": 1.0}
         },
-        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Spectrum (log)", "Filtered Result"]
     },
 
     "Band-Pass Filter": {
@@ -121,7 +121,7 @@ FILTER_CONFIG = {
             "D_1": {"label": "D_1 - lower cutoff frequency", "type": "float", "default": 10.0, "min": 1.0, "max": 300.0, "step": 1.0},
             "D_2": {"label": "D_2 - upper cutoff frequency", "type": "float", "default": 50.0, "min": 1.0, "max": 300.0, "step": 1.0}
         },
-        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Spectrum (log)", "Filtered Result"]
     },
 
     "Band-Stop Filter": {
@@ -131,6 +131,6 @@ FILTER_CONFIG = {
             "D_1": {"label": "D_1 - lower cutoff frequency", "type": "float", "default": 10.0, "min": 1.0, "max": 300.0, "step": 1.0},
             "D_2": {"label": "D_2 - upper cutoff frequency", "type": "float", "default": 50.0, "min": 1.0, "max": 300.0, "step": 1.0}
         },
-        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Result"]
+        "previews": ["Original", "Spectrum (log)", "Mask H(u,v)", "Filtered Spectrum (log)", "Filtered Result"]
     },
 }
