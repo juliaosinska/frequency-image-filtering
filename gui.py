@@ -189,9 +189,11 @@ class ImageFilterApp:
         if clear_original:
             self.original_image = None
             self.results_dict = {}
+            self.status_var.set("Ready. Choose a filter and click 'Apply Filter'.")
         else:
             if first_key and self.original_image:
                 self.results_dict = {first_key: self.original_image}
+                self.status_var.set("Parameters changed. Click 'Apply Filter' to update results.")
 
     def upload_image(self):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.jpeg *.png *.bmp")])
@@ -233,12 +235,12 @@ class ImageFilterApp:
             self.status_var.set("Method for High-Boost: Pixel values scaled using the enhancement formula and clipped to [0, 255].")
         elif "Difference" in selected_filter:
             self.status_var.set("Method for DoG: Difference of Gaussians clipped to the range [0, 255].")
-        elif "Laplacian" in selected_filter:
+        elif "Laplacian" in selected_filter and "Gaussian" not in selected_filter:
             self.status_var.set("Method for LoG: Laplacian of Gaussian response shifted by +128 and clipped to [0, 255] for visualization.")
-        elif "Filter" in selected_filter and "Frequency" not in selected_filter and "Pass" not in selected_filter:
+        elif selected_filter in ("Averaging", "Separable Gaussian", "Sharpening", "Laplacian"):
             self.status_var.set(f"Method for {selected_filter}: Standard clipping (clip) of values outside the range [0, 255].")
         else:
-            self.status_var.set(f"Frequency Domain Filter ({selected_filter}): Real part of IFFT clipped to [0, 255].")
+            self.status_var.set(f"Frequency Domain Filter ({selected_filter}): Converted to grayscale ('L'), real part of IFFT clipped to [0, 255].")
 
     def save_image(self):
         if not hasattr(self, 'results_dict') or not self.results_dict:
